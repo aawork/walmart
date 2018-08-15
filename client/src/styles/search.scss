@@ -1,0 +1,78 @@
+@import 'constants';
+
+$shadow-small: 0 1px 1px rgba(0, 0, 0, 0.24);
+
+.searchInput {
+
+  .inputContainer {
+    height: 40px;
+    margin-left: 50px;
+    margin-right: 50px;
+    overflow: hidden;
+  }
+
+  form {
+    -webkit-box-shadow: $shadow-small;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    box-shadow: $shadow-small;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 720px;
+    position: relative;
+    transition: background 100ms ease-in, width 100ms ease-out;
+
+    input[type=text] {
+      border: none;
+      font-size: $small;
+      height: 100%;
+      outline: none;
+      padding: 0 10px;
+      width: 100%;
+    }
+
+    input:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 30px white inset;
+    }
+
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      height: 100%;
+      line-height: 0;
+      outline: none;
+      padding: 0 4px;
+      position: absolute;
+      transition: opacity 250ms ease-out;
+      width: 48px;
+    }
+
+    button.clear {
+      right: 0;
+      top: 0;
+    }
+
+    button:hover {
+      background-color: $push;
+    }
+
+    button:active {
+      background-color: $highlight;
+    }
+
+    button.close {
+      display: none;
+    }
+
+    button.search {
+      float: left;
+      position: absolute;
+      top: 0;
+    }
+  }
+}
+
+
+

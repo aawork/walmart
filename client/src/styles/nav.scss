@@ -1,0 +1,54 @@
+@import 'constants';
+@import 'search';
+
+$shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+
+nav {
+
+  -webkit-box-shadow: $shadow;
+  background-color: $white;
+  box-shadow: $shadow;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between; // space-around
+  overflow: hidden;
+  padding: 5px 10px;
+  position: sticky;
+  top: 0px;
+
+  .searchInput {
+    flex-grow: 1;
+    margin-top: 3px;
+  }
+
+  .nav-brand, .nav-spark {
+    padding: 0 20px 0 10px;
+    svg {
+      padding-top: 2px;
+    }
+  }
+
+  .github {
+    margin: 10px 20px 0 20px;
+  }
+
+  .nav-spark {
+    display: none;
+  }
+}
+
+@media (max-width: $smallScreenSize) {
+  nav {
+    background-color: $blue;
+    justify-content: left;
+    .nav-brand, .github {
+      display: none;
+    }
+    .nav-spark {
+      display: inline-flex;
+    }
+  }
+}
+
+
+

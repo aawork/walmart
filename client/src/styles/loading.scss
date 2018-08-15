@@ -1,0 +1,65 @@
+@import "constants";
+
+.loading, .error, .empty {
+  font-size: 1.2rem;
+  width: 320px;
+  position: absolute;
+  z-index: -5;
+  top: 50%;
+  left: 50%;
+  margin-top: -160px;
+  margin-left: -160px;
+  .message {
+    text-align: center;
+  }
+  .icon {
+    height: 30%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -20%;
+    width: 50%;
+    svg {
+      width: 100%;
+    }
+  }
+}
+
+.error {
+  color: $red;
+}
+
+@-moz-keyframes spin {
+  100% {
+    -moz-transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+$spinAnimation: spin 4s linear infinite;
+
+.loading {
+  color: $dark;
+  .icon {
+    -webkit-animation: $spinAnimation;
+    -moz-animation: $spinAnimation;
+    animation: spin $spinAnimation;
+    svg {
+      opacity: 0.05;
+      //transform: rotate(45deg);
+    }
+  }
+}
+
+

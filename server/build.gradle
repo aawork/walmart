@@ -1,0 +1,89 @@
+apply plugin: 'java-library'
+apply plugin: 'war'
+
+group = 'walmart'
+version = '1.0'
+
+project.ext.jacksonVersion = "2.9.6"
+project.ext.springVersion = "5.0.8.RELEASE"
+project.ext.logbackVersion = "1.2.3"
+project.ext.slf4jVersion = "1.7.25"
+project.ext.jettyVersion = "9.4.8.v20180619"
+
+sourceSets.main.java.srcDirs = ['src/main/java']
+sourceSets.main.resources.srcDirs = ['src/main/resources']
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+
+    api "org.slf4j:slf4j-api:$slf4jVersion"
+
+    api "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    api "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+    api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+
+    api "org.springframework:spring-core:$springVersion"
+    api "org.springframework:spring-context-support:$springVersion"
+    api "org.springframework:spring-web:$springVersion"
+    api "org.springframework:spring-webmvc:$springVersion"
+
+    api "org.apache.commons:commons-lang3:3.7"
+    api "org.apache.commons:commons-text:1.4"
+    api "commons-io:commons-io:2.6"
+    api "org.apache.commons:commons-collections4:4.2"
+    api "com.google.guava:guava:26.0-jre"
+
+    testImplementation 'junit:junit:4.12'
+
+    testCompileOnly "org.eclipse.jetty:jetty-server:$jettyVersion"
+    testCompileOnly "org.eclipse.jetty:jetty-webapp:$jettyVersion"
+
+    providedCompile "org.eclipse.jetty:jetty-server:$jettyVersion"
+    providedCompile "org.eclipse.jetty:jetty-webapp:$jettyVersion"
+
+    providedCompile "org.slf4j:log4j-over-slf4j:$slf4jVersion"
+    providedCompile "org.slf4j:jcl-over-slf4j:$slf4jVersion"
+    providedCompile "ch.qos.logback:logback-classic:$logbackVersion"
+    providedCompile "ch.qos.logback:logback-core:$logbackVersion"
+
+}
+
+repositories {
+    jcenter()
+}
+
+task bundle(type: War) {
+
+    from {
+        configurations.providedCompile.collect {
+            return it.isDirectory() ? it : zipTree(it)
+        }
+    }
+
+    exclude 'about.html'
+    exclude 'jetty*.css'
+
+    into('jetty') {
+        from 'build/classes/java/main/jetty/JettyRunner.class'
+    }
+
+    from 'src/main/resources'
+
+    manifest {
+        attributes 'Main-Class': 'jetty.JettyRunner'
+    }
+
+    from('../client/dist')
+
+    outputs.upToDateWhen { false }
+}
+
+war {
+    manifest {
+        attributes 'Main-Class': 'jetty.JettyRunner'
+    }
+}
+
+
