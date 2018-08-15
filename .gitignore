@@ -7,3 +7,4 @@ server/.idea
 server/build
 walmart.war
 docs
+server/out
