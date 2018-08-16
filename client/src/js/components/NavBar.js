@@ -11,7 +11,7 @@ import SearchInput from '~/js/components/SearchInput';
 class NavBar extends Component {
 
     render() {
-        log.debug("render NavBar")
+        log.debug("render NavBar", this.props)
         return (
             <nav className="sticky-top">
                 <a href="#" className="nav-brand">
@@ -34,7 +34,7 @@ class NavBar extends Component {
 }
 
 NavBar.propTypes = {
-    //query: PropTypes.string.isRequired,
+    query: PropTypes.string,
     callback: PropTypes.func.isRequired
 };
 

@@ -16,12 +16,17 @@ class SearchInput extends Component {
     }
 
     handleChange(event) {
+        log.debug("[Search] handleChange", event.target.value)
         this.setState({value: event.target.value});
     }
 
     handleSubmit(event) {
+        log.debug("[Search] handleSubmit", event)
         event.preventDefault();
-        this.props.handleSearch(this.state.value)
+        let q = this.state.value.trim()
+        if (q.length > 0) {
+            this.props.handleSearch(this.state.value)
+        }
     }
 
     handleCleanup(event) {
@@ -37,14 +42,19 @@ class SearchInput extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <button className="close"></button>
                     <div className="inputContainer">
-                        <input type="text" placeholder="Search..." name="search" value={this.state.value}
-                               onChange={this.handleChange}/>
+                        <input
+                            maxLength="200"
+                            name="search"
+                            onChange={this.handleChange.bind(this)}
+                            placeholder="Search..."
+                            type="text"
+                            value={this.state.value}/>
                     </div>
-                    <button className="clear" onClick={this.handleCleanup}>
-                        <ClearIcon/>
-                    </button>
-                    <button className="search">
+                    <button type="submit" className="search">
                         <SearchIcon/>
+                    </button>
+                    <button className="clear" onClick={this.handleCleanup.bind(this)}>
+                        <ClearIcon/>
                     </button>
                 </form>
             </div>

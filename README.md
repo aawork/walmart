@@ -1,10 +1,22 @@
 
+### URL and bookmarks
+
+* search query with single term:
+* search with sentence: 
+    * [http://rockvillesoft.com/walmart/#/search/slim+shirt](http://rockvillesoft.com/walmart/#/search/slim+shirt)
+    * __fake news__ :" [http://rockvillesoft.com/walmart/#/search/fake+news](http://rockvillesoft.com/walmart/#/search/fake+news)
+    * __friends season #1__ : [http://rockvillesoft.com/walmart/#/search/friends+season+%231](http://rockvillesoft.com/walmart/#/search/friends+season+%231)
+    * __©__ : [http://rockvillesoft.com/walmart/#/search/+©+](http://rockvillesoft.com/walmart/#/search/+©+)
+     
+    
+
+
+
 ### Loading Corner Cases
 
 * Initial Loading
 
-![Image of Loading](docs/load-process.png)
-
+![Image of Loading](docs/load-process.png){:height="50%" width="50%"}
 
 * Load completed successfully but without any information (empty response)
 
@@ -12,7 +24,7 @@
 
 
 * Communication Issues
-    * Backend server (or cluster is down)
+    * Backend server (or cluster is down: in the non DEMO case suppose to be repeat-N logic instead of error)
     * Load balancer failures
     * Network issues
 
@@ -34,6 +46,12 @@ Here is example behavior in case when HTML input element has no length limitatio
     
 In this application it is possible to click on `recommendation` and navigate to another product
 
+
+
+### Out of scope
+
+* Localization and text/ui orientation
+* Accessibility: label areas, 
        
 
 

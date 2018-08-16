@@ -38,7 +38,7 @@ class ProductDetails extends Component {
 
         log.debug("[DETAILS] shouldComponentUpdate: nextProps:" + nextProps.id + " vs " + this.props.id)
 
-        log.debug("[DETAILS] shouldComponentUpdate: nextProps.item:" , nextProps.item)
+        log.debug("[DETAILS] shouldComponentUpdate: nextProps.item:", nextProps.item)
 
         if (this.props.id != nextProps.id) {
             this.loadDetails(nextProps, true);
@@ -68,12 +68,6 @@ class ProductDetails extends Component {
 
         let status = this.state.status
 
-        // log.debug("[DETAILS] this.state", this.state)
-        // log.debug("[DETAILS] this.props", this.props)
-        // log.debug("[DETAILS] props", props)
-
-        // status.start("loadDetails:" + id, item)
-
         if (force || !item || item.id != id) {
 
             if (force) {
@@ -85,6 +79,12 @@ class ProductDetails extends Component {
             }
 
             log.debug("[DETAILS] loading details... by " + id)
+
+            //TODO: not good enough
+
+            if (!item || force) {
+                status.start("Loading product . . .")
+            }
 
             this.service.loadDetails(id).then(response => {
                 status.onComplete()
@@ -115,7 +115,6 @@ class ProductDetails extends Component {
                     let data = response.result
                     log.debug("[DETAILS] recommendations", data.recommendations)
                     if (data.id == id) {
-                        //this.setState({item: data})
                         this.setState((prevState, props) => ({
                             item: data
                         }));
@@ -124,12 +123,11 @@ class ProductDetails extends Component {
                     }
                 }).catch(error => {
                     log.error("[DETAILS] error", error)
-                    //this.state.status.onError(error)
+                    // process recommendations error is not needed : not critical for UX: no extra error message
                 });
             } else {
                 log.debug("do nothing")
             }
-
         }
     }
 

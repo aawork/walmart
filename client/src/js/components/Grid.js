@@ -67,7 +67,7 @@ class Grid extends Component {
 
         log.debug("[GRID] reload data for filter:", filter)
 
-        this.state.status.start(!filter ? "Loading Trends..." : "Searching for " + filter + " ...");
+        this.state.status.start(!filter ? "Loading trends . . ." : "Please wait . . .");
 
         this.filter = filter
 
@@ -86,15 +86,13 @@ class Grid extends Component {
             this.setState({data: data});
         }).catch(error => {
             log.error("[GRID] error", error);
-            this.setState({data: null});
             this.state.status.onError(error);
             this.setState({
-                    data: null,
-                    status: this.state.status
-                });
+                data: null,
+                status: this.state.status
+            });
         });
 
-        // this.setState({filter:filter})
     }
 
     shouldComponentUpdate(props) {

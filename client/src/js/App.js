@@ -52,6 +52,8 @@ class App extends Component {
 
             this.query = query;
 
+            query = query.trim()
+
             query = query.replaceAll(/\s/g, "+");
 
             query = query.replace(/#/g, '%23');
@@ -66,6 +68,7 @@ class App extends Component {
         }
         query = query.replaceAll("\\+", " ")
         query = query.replaceAll("%23", "#")
+        query = query.trim()
         return query
     }
 
@@ -76,7 +79,7 @@ class App extends Component {
         return (
             <div>
 
-                <NavBar query={this.query} callback={this.search.bind(this)}/>
+                <NavBar query={this.props.match.params.query} callback={this.search.bind(this)}/>
 
                 <Switch>
 
