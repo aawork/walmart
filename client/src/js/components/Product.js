@@ -10,7 +10,7 @@ class Product extends Component {
 
     onSelected(event) {
         //event.preventDefault();
-        log.info("=== open ", this.props.item)
+        log.info("[Product] onSelected", this.props.item)
         this.props.onClick(this.props.item);
     }
 

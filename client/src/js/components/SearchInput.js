@@ -9,7 +9,7 @@ class SearchInput extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {value: ''};
+        this.state = {value: props.query ? props.query : ''};
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleCleanup = this.handleCleanup.bind(this);
@@ -63,6 +63,7 @@ class SearchInput extends Component {
 }
 
 SearchInput.propTypes = {
+    query: PropTypes.string,
     onChange: PropTypes.func,
     handleSearch: PropTypes.func.isRequired
 };

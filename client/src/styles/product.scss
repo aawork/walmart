@@ -23,8 +23,6 @@
   .title {
     font-size: .875rem;
     min-height: 30px;
-    //white-space:nowrap;
-    //overflow: hidden;
   }
 
   .finance {
@@ -81,7 +79,11 @@
 }
 
 .productDetails {
-  margin: 20px 20px 50px 20px;
+  margin: 15px 15px 50px 15px;
+
+  h2 {
+    margin-top: 5px;
+  }
 }
 
 .details {
@@ -92,10 +94,21 @@
   margin-top: 20px;
   margin-left: auto;
   margin-right: auto;
+
+  .bigImage {
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
 }
 
 .info {
-  padding: 40px;
+  padding: 1rem;
   max-width: 500px;
 
   .title {
@@ -117,7 +130,6 @@
 
 @media (max-width: $smallScreenSize) {
   .details {
-    //flex-flow: row nowrap;
     flex-direction: column-reverse;
   }
 }

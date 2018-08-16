@@ -11,7 +11,9 @@ import SearchInput from '~/js/components/SearchInput';
 class NavBar extends Component {
 
     render() {
+
         log.debug("render NavBar", this.props)
+
         return (
             <nav className="sticky-top">
                 <a href="#" className="nav-brand">
@@ -22,7 +24,7 @@ class NavBar extends Component {
                     <a href="#"><Spark/></a>
                 </div>
 
-                <SearchInput handleSearch={this.props.callback} />
+                <SearchInput query={this.props.query} handleSearch={this.props.callback} />
 
                 <a className="github" href="https://github.com/aawork/walmart" target="_blank" rel="noopener" aria-label="GitHub">
                     <GitHubLogo />
@@ -30,7 +32,6 @@ class NavBar extends Component {
             </nav>
         );
     }
-
 }
 
 NavBar.propTypes = {

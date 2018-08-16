@@ -8,55 +8,90 @@ import LoadState from '~/js/model/LoadState';
 import Product from '~/js/components/Product';
 import Rating from '~/js/components/Rating';
 
+const loadingMessage = "Loading product . . .";
+
 class ProductDetails extends Component {
 
     constructor(props) {
         super(props);
         this.service = new DetailsService();
-        log.info("ProductDetails", props)
+        log.info("[DETAILS] constructor", props)
+
+        let status = new LoadState();
+
+        status.start(loadingMessage)
 
         this.state = {
+            id: props.id,
             item: props.item,
-            status: new LoadState()
+            status: status
         }
 
         this.loadDetails(props)
     }
 
     static getDerivedStateFromProps(props, state) {
-        if (props.item) {
-            if (state.item && props.item.id == state.item.id) {
-                return null
-            }
-            log.debug("[DETAILS] getDerivedStateFromProps: item from props: " + props.item.id)
-            return {item: null}
+
+        let nextId = props.id
+
+        let nextItem = props.item
+
+        let currentItem = state.item;
+
+        let currentId = state.id
+
+        let status = state.status
+
+        if (currentId == null) {
+            log.error("[DETAILS] null currentId")
+            return null;
         }
-        return null
+
+        // URL navigation : item not loaded yet
+        if (!nextItem) {
+
+            if (currentItem) {
+                if (currentItem.id != nextId) {
+                    log.debug("[DETAILS] Item changed : Loading...")
+                    status.start(loadingMessage)
+                    return {item: null, id: nextId, status: status}
+                }
+            } else {
+                if (currentId != nextId) {
+                    log.debug("[DETAILS] ID changed : Loading...")
+                    status.start(loadingMessage)
+                    return {item: null, id: nextId, status: status}
+                }
+            }
+
+            return null;
+        }
+
+        if (nextItem.id == currentId) {
+            return null;
+        }
+
+        // status.start(loadingMessage)
+        return {item: nextItem, id: nextId, status: status}
     }
+
 
     shouldComponentUpdate(nextProps, nextState) {
 
-        log.debug("[DETAILS] shouldComponentUpdate: nextProps:" + nextProps.id + " vs " + this.props.id)
+        let result = this.props.id != nextProps.id;
 
-        log.debug("[DETAILS] shouldComponentUpdate: nextProps.item:", nextProps.item)
+        log.debug("[DETAILS] shouldComponentUpdate: nextProps:" + nextProps.id + " vs " + this.props.id + " >>> " + result)
 
-        if (this.props.id != nextProps.id) {
-            this.loadDetails(nextProps, true);
-        } else {
-            log.debug("[DETAILS] load skipped")
+        let nextId = nextProps.id;
+
+        if (!this.state.item || this.state.item.id != nextId || this.props.id != nextId) {
+            this.loadDetails(nextProps, false);
         }
-
 
         return true
     }
 
-    // componentDidMount() {
-    //     // this.state = {item: null}
-    //     this.loadDetails(this.props);
-    // }
-
     onClose(event) {
-        // event.preventDefault();
         this.props.onClose(this.props.item);
     }
 
@@ -80,23 +115,24 @@ class ProductDetails extends Component {
 
             log.debug("[DETAILS] loading details... by " + id)
 
-            //TODO: not good enough
-
-            if (!item || force) {
-                status.start("Loading product . . .")
-            }
-
             this.service.loadDetails(id).then(response => {
                 status.onComplete()
                 let data = response.result
+
                 log.debug("[DETAILS] data", data)
-                log.debug("[DETAILS] current props", this.props.id)
                 log.debug("[DETAILS] recommendations", data.recommendations)
+
                 if (data.id == id) {
-                    //this.setState({item: data})
+
                     this.setState((prevState, props) => ({
-                        item: data
+                        id: id,
+                        item: data,
+                        status: status
                     }));
+
+                    log.info("[DETAILS] new state:", this.state)
+                } else {
+                    log.error("[DETAILS] ignore: ID changed: " + data.id + " vs " + id)
                 }
             }).catch(error => {
                 this.state.status.onError(error)
@@ -123,11 +159,21 @@ class ProductDetails extends Component {
                     }
                 }).catch(error => {
                     log.error("[DETAILS] error", error)
-                    // process recommendations error is not needed : not critical for UX: no extra error message
+                    // process recommendations error is not needed : not critical for UX: avoid extra error messages
                 });
             } else {
                 log.debug("do nothing")
             }
+        }
+    }
+
+    openRecommendation(recommendation) {
+
+        document.body.scrollTop = 0;            // Safari
+        document.documentElement.scrollTop = 0; // Chrome, Firefox
+
+        if (this.props.openDetails) {
+            this.props.openDetails(recommendation);
         }
     }
 
@@ -137,12 +183,14 @@ class ProductDetails extends Component {
 
         let item = this.state ? this.state.item : null;
 
-        // if (!status.isComplete()) {
-        //     status.onError({code: 404, message: "Product is not found"}) // this is actually not possible
-        // }
-
         if (!status.isComplete()) {
             log.debug("[DETAILS] render status:", status)
+            return (<Loading state={status}/>);
+        }
+
+        // TODO: remove
+        if (!item) {
+            status.onError({code: 4, message: "Incorrect State"});
             return (<Loading state={status}/>);
         }
 
@@ -151,58 +199,61 @@ class ProductDetails extends Component {
         let recommendations = [];
         if (item && item.recommendations) {
             for (var i = 0; i < item.recommendations.length; i++) {
-                let recomendation = item.recommendations[i];
-                recommendations.push(<Product key={recomendation.id}
-                                              item={recomendation}
-                                              onClick={this.props.openDetails}/>);
+                let recommendation = item.recommendations[i];
+                recommendations.push(
+                    <Product key={recommendation.id}
+                             item={recommendation}
+                             onClick={this.props.openDetails.bind(this)}/>
+                );
             }
         }
 
-        if (item != null) {
+        return (
+            <div className="productDetails">
 
-            return (
-                <div className="productDetails">
+                <div className="details">
 
-                    <div className="details">
-                        <div>
-                            <img alt={item.name} src={item.imageURL}/>
+                    <div className="bigImage">
+                        <img alt={item.name} src={item.imageURL}/>
+                    </div>
+
+                    <div className="info">
+                        <div className="title">{item.name}</div>
+
+                        <Rating value={item.rating} count={item.ratingsCount}/>
+
+                        <div className="finance">
+                            <span className="price">${item.price}</span>
                         </div>
-                        <div className="info">
-                            <div className="title">{item.name}</div>
-                            <Rating value={item.rating} count={item.ratingsCount}/>
-                            <div className="finance">
-                                <span className="price">${item.price}</span>
+
+                        {item.description && (
+                            <div className="description" dangerouslySetInnerHTML={{__html: item.description}}></div>
+                        )}
+                        {item.walmartURL && (
+                            <p><a href={item.walmartURL} target="_blank">Walmart Link</a></p>
+                        )}
+                    </div>
+                </div>
+
+                {recommendations.length > 0 && (
+                    <div>
+                        <h2>Recommendations</h2>
+                        <div className="recommendations">
+                            <div className="swipeView">
+                                {recommendations}
                             </div>
-                            {item.description && (
-                                <div className="description" dangerouslySetInnerHTML={{__html: item.description}}></div>
-                            )}
-                            {item.walmartURL && (
-                                <p><a href={item.walmartURL} target="_blank">Walmart Link</a></p>
-                            )}
                         </div>
                     </div>
-                    {recommendations.length > 0 && (
-                        <div>
-                            <h2>Recommendations</h2>
-                            <div className="recommendations">
-                                <div className="swipeView">
-                                    {recommendations}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            );
-        }
-
-        return (<h1>LOADING</h1>)
+                )}
+            </div>
+        );
     }
 }
 
 ProductDetails.propTypes = {
-    onClose: PropTypes.func.isRequired,
+    id: PropTypes.number.isRequired,
     item: PropTypes.object,
-    id: PropTypes.number
+    onClose: PropTypes.func.isRequired
 };
 
 

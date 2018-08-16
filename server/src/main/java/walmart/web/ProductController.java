@@ -23,11 +23,13 @@ public class ProductController {
 
     @PostMapping("/products")
     public Object search(@RequestBody ListRequest request) {
+
         return WebUtil.wrapResult(service.search(request));
     }
 
     @GetMapping("/product/{id}")
     public Object details(@PathVariable("id") Long id) {
+
         final Product result = service.loadDetails(id);
         return WebUtil.wrapResult(result);
     }
@@ -37,4 +39,5 @@ public class ProductController {
         final List<Product> result = service.getRecommendations(id);
         return WebUtil.wrapResult(result);
     }
+
 }

@@ -15,17 +15,33 @@ class App extends Component {
 
     constructor(props) {
         super();
-        this.state = {}
+        let params = props.match.params
+        this.state = {
+            query: params && params.query ? params.query : ''
+        }
         log.enableAll()
         log.setDefaultLevel("debug")
         //log.disableAll()
 
-        log.info(props.match)
+        log.info("[APP] constructor", props.match)
     }
 
     static getDerivedStateFromProps(props, state) {
-        log.debug("[APP] getDerivedStateFromProps", props.match)
-        return state
+
+        let params = props.match.params
+        if (params == null) {
+            if (state.query != '') {
+                log.debug("[APP] cleanup query")
+                return {query: ''}
+            }
+        } else {
+            if (params.query != state.query) {
+                log.debug("[APP] set query: " + params.query)
+                return {query: params.query}
+            }
+        }
+
+        return null
     }
 
     componentDidMount() {
@@ -42,7 +58,7 @@ class App extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        log.debug("componentDidUpdate", this.props)
+        log.debug("[APP] componentDidUpdate", this.props)
     }
 
     search(query) {
@@ -63,7 +79,7 @@ class App extends Component {
     }
 
     parseQuery(query) {
-        if(!query) {
+        if (!query) {
             return null
         }
         query = query.replaceAll("\\+", " ")
@@ -83,12 +99,21 @@ class App extends Component {
 
                 <Switch>
 
-                    <Route path="/product/:id" exact={true} render={({match}) => (
-                        <ProductDetails id={parseInt(match.params.id)}
-                                        item={product}
-                                        openDetails={this.openDetails.bind(this)}
-                                        onClose={() => this.closeDetails()}/>
-                    )}/>
+                    <Route path="/product/:id" exact={true} render={({match}) => {
+
+                        log.debug("[APP] product:" + (product ? product.id : null) + " match:" + match.params.id)
+
+                        let productId = match.params.id
+
+                        let productItem = product && product.id == productId ? product : null
+
+                        return (
+                            <ProductDetails id={parseInt(match.params.id)}
+                                            item={productItem}
+                                            openDetails={this.openDetails.bind(this)}
+                                            onClose={() => this.closeDetails()}/>);
+                    }
+                    }/>
 
                     <Route path="/search/:query" render={({match}) => {
                         let query = match.params.query;
@@ -110,8 +135,7 @@ class App extends Component {
     }
 
     openDetails(item) {
-        log.info("open details", item);
-        //this.setState({product:item})
+        log.info("[APP] open details", item);
 
         this.setState((prevState, props) => {
             return {product: item};
@@ -125,7 +149,7 @@ class App extends Component {
 
 export default withRouter(App);
 
-String.prototype.replaceAll = function(search, replacement) {
+String.prototype.replaceAll = function (search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
 };
