@@ -2,7 +2,7 @@ const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
-module.exports = {    
+module.exports = {
     module: {
         rules: [
             {
@@ -37,14 +37,16 @@ module.exports = {
                 test: /\.(woff|woff2|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
                 exclude: /node_modules/,
                 use: {
-                    loader: 'file-loader'
+                    loader: 'file-loader',
+                    options: {
+                        name: "fonts/[name].[ext]",
+                    }
                 }
             }
         ]
     },
     plugins: [
         new MiniCssExtractPlugin({
-            // filename: "app.css"
             filename: "[name].css",
             chunkFilename: "[id].css"
         }),

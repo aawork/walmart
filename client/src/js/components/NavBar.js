@@ -17,12 +17,13 @@ class NavBar extends Component {
                 <a href="#" className="nav-brand">
                     <Logo/>
                 </a>
+
                 <div className="nav-spark">
                     <a href="#"><Spark/></a>
                 </div>
 
                 <SearchInput handleSearch={this.props.callback} />
-                <span>{this.props.query}</span>
+
                 <a className="github" href="https://github.com/aawork/walmart" target="_blank" rel="noopener" aria-label="GitHub">
                     <GitHubLogo />
                 </a>
