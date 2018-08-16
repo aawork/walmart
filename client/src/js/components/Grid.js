@@ -80,13 +80,18 @@ class Grid extends Component {
             if (data && data.items && data.items.length) {
                 this.state.status.onComplete();
             } else {
-                status.onEmpty(this.emptyMessage())
+                this.state.status.onEmpty(this.emptyMessage())
             }
             log.info("[GRID] data", data)
             this.setState({data: data});
         }).catch(error => {
-            //this.setState({data: null});
+            log.error("[GRID] error", error);
+            this.setState({data: null});
             this.state.status.onError(error);
+            this.setState({
+                    data: null,
+                    status: this.state.status
+                });
         });
 
         // this.setState({filter:filter})
@@ -99,7 +104,7 @@ class Grid extends Component {
     }
 
     emptyMessage() {
-        return this.filter ? "No trends found" : "Nothing found for '" + this.filter + "'"
+        return !this.filter ? "No trends found" : "Nothing found"
     }
 
     render() {

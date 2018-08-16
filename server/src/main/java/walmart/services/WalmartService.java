@@ -48,6 +48,12 @@ public class WalmartService {
             throw new IllegalStateException();
         }
 
+        if (query.length() > 200) {
+            throw APIException.badRequest("Query is too long");
+        }
+
+        query = query.replaceAll("#", "%23");
+
         final String url = url("/search?query=" + query);
 
         log.debug("url: {}", url);

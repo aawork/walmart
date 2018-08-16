@@ -54,8 +54,19 @@ class App extends Component {
 
             query = query.replaceAll(/\s/g, "+");
 
+            query = query.replace(/#/g, '%23');
+
             this.props.history.push("/search/" + encodeURI(query))
         }
+    }
+
+    parseQuery(query) {
+        if(!query) {
+            return null
+        }
+        query = query.replaceAll("\\+", " ")
+        query = query.replaceAll("%23", "#")
+        return query
     }
 
     render() {
@@ -78,7 +89,7 @@ class App extends Component {
 
                     <Route path="/search/:query" render={({match}) => {
                         let query = match.params.query;
-                        let filter = query ? query.replaceAll("\\+", " ") : null
+                        let filter = this.parseQuery(query)
                         return (
                             <Grid filter={filter} openDetails={this.openDetails.bind(this)}/>
                         )

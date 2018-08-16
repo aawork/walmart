@@ -6,5 +6,6 @@ server/.gradle
 server/.idea
 server/build
 walmart.war
-docs
 server/out
+Walmart.sketch
+.idea

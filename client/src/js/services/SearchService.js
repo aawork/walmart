@@ -1,21 +1,11 @@
-import * as log from "loglevel";
+import AbstractService from "~/js/services/AbstractService"
 
-class SearchService {
+class SearchService extends AbstractService {
 
     search(query) {
-        let url = "api/products";
-        let options = {
-            method: 'POST',
-            body: JSON.stringify({text: query}),
-            headers: {
-                "Content-Type": "application/json; charset=utf-8"
-            }
-        };
-
-        return fetch(url, options).then(result => {
-            return result.json();
-        });
+        return this.post("api/products", {text: query})
     }
+
 }
 
 export default SearchService;

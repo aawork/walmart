@@ -29,7 +29,7 @@ class ProductDetails extends Component {
                 return null
             }
             log.debug("[DETAILS] getDerivedStateFromProps: item from props: " + props.item.id)
-            // return {item: props.item}
+            return {item: null}
         }
         return null
     }

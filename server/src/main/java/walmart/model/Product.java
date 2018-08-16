@@ -106,4 +106,7 @@ public class Product {
     public String getWalmartURL() {
         return walmartURL;
     }
+
 }
+
+

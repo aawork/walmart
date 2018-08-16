@@ -1,17 +1,12 @@
-class DetailsService {
+import AbstractService from "~/js/services/AbstractService"
+
+class DetailsService extends AbstractService {
 
     loadDetails(id) {
-        let url = "api/product/"+id;
-        let options = {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json; charset=utf-8"
-            }
-        };
 
-        return fetch(url, options).then(result => {
-            return result.json();
-        });
+        let url = "api/product/" + id;
+
+        return this.get(url)
     }
 }
 

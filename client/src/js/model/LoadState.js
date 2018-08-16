@@ -1,9 +1,9 @@
-const INITIAL = 'init';
-const LOADING = 'loading';
-const ERROR = 'error';
-const SERVER_ERROR = 'failed';
 const COMPLETE = 'complete';
 const EMPTY = 'empty';
+const ERROR = 'error';
+const INITIAL = 'init';
+const LOADING = 'loading';
+const SERVER_ERROR = 'failed';
 
 class LoadState {
 
@@ -20,7 +20,7 @@ class LoadState {
     }
 
     isFailed() {
-        return this.status === ERROR || this.status === this.status === SERVER_ERROR
+        return this.status === ERROR || this.status === SERVER_ERROR
     }
 
     isEmpty() {
@@ -37,7 +37,7 @@ class LoadState {
     }
 
     onError(error) {
-        this.status = !error || error.code === 500 ? SERVER_ERROR : ERROR
+        this.status = !error || error.code >= 500 ? SERVER_ERROR : ERROR
 
         if (this.status === SERVER_ERROR) {
             this.message = "Server communication failed"
