@@ -1,3 +1,7 @@
+# Walmart Products
+
+Single-page responsive web application to display Walmart product search results and rank-ordered recommendations.
+
 ## Live Demo
 
 [http://rockvillesoft.com/walmart](http://rockvillesoft.com/walmart)
@@ -46,7 +50,7 @@ Server app function as a proxy
 * search result : 1 minute
 * trends : 10 minutes
 * product details : 5 minutes
-* product details cached with associated recommendations (when product loaded by ID this approach will give 2x boost on reducing number of API calls. but when product information is already loaded during search and trends operations this gives up to 10% traffic overhead, not paying attention to gzaip filter). this obviously cold be done differently.   
+* product details cached with associated recommendations (when product loaded by ID this approach will give 2x boost on reducing number of API calls. but when product information is already loaded during search and trends operations this gives up to 10% traffic overhead, not paying attention to gzip filter). this obviously cold be done differently.   
 
 
 ### URL and bookmarks
@@ -79,7 +83,7 @@ All states in the app reflected by URL (bookmarks and direct links)
 
 * Initial Loading
 
-![Image of Loading](docs/load-process.png){:height="50%" width="50%"}
+![Image of Loading](docs/load-process.png)
 
 * Load completed successfully but without any information (empty response)
 
@@ -120,14 +124,17 @@ In this application it is possible to click on `recommendation` and navigate to 
     * Localization and text/ui orientation
     * Accessibility: label areas,
  
-### Testing (incomplete)
+## Incomplete (TODO)
 *  REST API testing:
     * for each endpoint verify and corners cases (incorrect input, timeouts)
     * for non API requests server should always respond with propper error and http status codes
 * UI end to end tests
-    * webpack / webdriver.io / selenium  
+    * webpack / webdriver.io / selenium         
+* Classes and methods comments
+* Change js/scss structure. Organize components in folders by components name
+* JS : apply jslint
+* JS : cleanup / simplify code
 
- 
        
 
 
