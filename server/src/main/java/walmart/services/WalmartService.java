@@ -129,6 +129,7 @@ public class WalmartService {
         try {
             return rest.getForObject(url, WLItem.class);
         } catch (Exception ex) {
+            log.warn("failed to find product by id", ex.getMessage());
             throw APIException.notFound();
         }
     }

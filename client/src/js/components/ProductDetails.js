@@ -54,13 +54,13 @@ class ProductDetails extends Component {
                 if (currentItem.id != nextId) {
                     log.debug("[DETAILS] Item changed : Loading...")
                     status.start(loadingMessage)
-                    return {item: null, id: nextId, status: status}
+                    return {item: null, id: nextId, status: status, stop: false}
                 }
             } else {
                 if (currentId != nextId) {
                     log.debug("[DETAILS] ID changed : Loading...")
                     status.start(loadingMessage)
-                    return {item: null, id: nextId, status: status}
+                    return {item: null, id: nextId, status: status, stop: false}
                 }
             }
 
@@ -72,11 +72,16 @@ class ProductDetails extends Component {
         }
 
         // status.start(loadingMessage)
-        return {item: nextItem, id: nextId, status: status}
+        return {item: nextItem, id: nextId, status: status, stop: false}
     }
 
 
     shouldComponentUpdate(nextProps, nextState) {
+
+        if (nextState.stop) {
+            log.debug("[DETAILS] stopped")
+            return true
+        }
 
         let result = this.props.id != nextProps.id;
 
@@ -135,7 +140,17 @@ class ProductDetails extends Component {
                     log.error("[DETAILS] ignore: ID changed: " + data.id + " vs " + id)
                 }
             }).catch(error => {
+
                 this.state.status.onError(error)
+
+                log.warn("[DETAILS] error", error)
+
+                this.setState((prevState, props) => ({
+                    id: id,
+                    item: null,
+                    status: status,
+                    stop: true
+                }));
             });
 
         } else {
@@ -162,7 +177,7 @@ class ProductDetails extends Component {
                     // process recommendations error is not needed : not critical for UX: avoid extra error messages
                 });
             } else {
-                log.debug("do nothing")
+                log.debug("[DETAILS] do nothing")
             }
         }
     }

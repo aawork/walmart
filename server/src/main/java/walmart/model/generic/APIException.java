@@ -97,6 +97,10 @@ public class APIException extends RuntimeException {
     }
 
     public static APIException notFound() {
-        return exception(NOT_FOUND_CODE, "Not found");
+        return notFound("Not found");
+    }
+
+    public static APIException notFound(String message) {
+        return new APIException(NOT_FOUND_CODE, message, DEFAULT_HTTP_STATUS_CODE, null);
     }
 }

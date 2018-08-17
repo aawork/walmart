@@ -23,7 +23,6 @@ public class ProductController {
 
     @PostMapping("/products")
     public Object search(@RequestBody ListRequest request) {
-
         return WebUtil.wrapResult(service.search(request));
     }
 

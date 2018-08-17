@@ -51,7 +51,14 @@ public class ProductService {
             throw APIException.badRequest("missed ID");
         }
 
-        return detailsCache.getUnchecked(id);
+        try {
+            return detailsCache.getUnchecked(id);
+        } catch (Exception ex) {
+            if (!(ex.getCause() instanceof APIException)) {
+                throw APIException.serverError(ex);
+            }
+            throw APIException.notFound("Product is not found");
+        }
     }
 
     public List<Product> getRecommendations(Long id) {
@@ -70,7 +77,7 @@ public class ProductService {
             throw APIException.badRequest("missed request object");
         }
 
-        final String query = StringUtils.trim(request.getText());
+        final String query = validateNormalizeQuery(request.getText());
 
         final WLSearchResponse wlResponse = StringUtils.isEmpty(query) ? service.trends() : service.search(query);
 
@@ -79,6 +86,23 @@ public class ProductService {
         result.setTotal(wlResponse.getTotalResults());
 
         return result;
+    }
+
+    private String validateNormalizeQuery(String query) {
+
+        if (query == null) {
+            throw APIException.badRequest("Missed query parameter");
+        }
+
+        query = query.replaceAll("&", " ");
+
+        query = StringUtils.trim(query);
+
+        if (query.length() == 0) {
+            throw APIException.badRequest("Empty query parameter");
+        }
+
+        return query;
     }
 
     private static List<Product> convertToProducts(List<WLItem> items) {
