@@ -6,7 +6,7 @@ import ProductDetails from '~/js/components/ProductDetails';
 import React, {Component} from "react";
 import {withRouter} from "react-router-dom";
 
-String.prototype.replaceAll = function(search, replacement) {
+String.prototype.replaceAll = function (search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
 };
@@ -16,10 +16,10 @@ class App extends Component {
     constructor(props) {
         super();
 
-        // log.enableAll()
-        // log.setDefaultLevel("debug")
+        log.enableAll()
+        log.setDefaultLevel("debug")
 
-        log.disableAll()
+        // log.disableAll()
 
         log.info("[APP] constructor", props)
 
@@ -52,19 +52,23 @@ class App extends Component {
 
         query = query.trim()
 
-        // query = query.replaceAll(/\s/g, "+");
+        query = query.replace(/\s\s+/g, ' ');
+
+        query = query.replaceAll(/\s/g, "_");
 
         query = query.replaceAll("%", "percent");   // TODO(AA): incomplete implementation (bug in react router)
 
-        // query = query.replaceAll("#", '%23');
+        query = query.replaceAll("#", '%23');
 
         log.debug("[APP] query:" + query)
 
         query = encodeURIComponent(query)
 
-        log.info("[APP] current:" + this.props.location.pathname)
-        log.info("[APP] query:" + query)
-        log.info("[APP] props", this.props)
+        query = query.replaceAll("_", '+');
+
+        //log.info("[APP] current:" + this.props.location.pathname)
+        //log.info("[APP] query:" + query)
+        //log.info("[APP] props", this.props)
 
         if (this.query != query) {
 
@@ -88,7 +92,7 @@ class App extends Component {
 
         query = decodeURIComponent(query)
 
-        // query = query.replaceAll("\\+", " ")
+        query = query.replaceAll("\\+", " ")
 
         // query = query.replaceAll("%23", "#")
 

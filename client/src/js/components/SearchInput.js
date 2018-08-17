@@ -28,12 +28,11 @@ class SearchInput extends Component {
     }
 
     handleChange(event) {
-        log.debug("[Search] handleChange", event.target.value)
         this.setState({value: event.target.value});
     }
 
     handleSubmit(event) {
-        log.debug("[Search] handleSubmit", event)
+        // log.debug("[Search] handleSubmit", event)
         event.preventDefault();
         let q = this.state.value.trim()
         if (q.length > 0) {
