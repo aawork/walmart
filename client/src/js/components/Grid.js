@@ -21,28 +21,15 @@ class Grid extends Component {
 
         this.state = {
             data: null,
-            //filter: props.filter,
             status: new LoadState()
         }
 
         this.filter = props.filter
 
-        // this.state.status.start('test');
-        // this.state.status.onError({code: 1, message: "failed to load any data"});
-        // this.state.status.onComplete();
-
         log.debug("[GRID] constructor", props, this.state)
 
         this.reloadData(props, true);
     }
-
-    // static getDerivedStateFromProps(props, state) {
-    //     if(state.filter == props.filter) {
-    //         return null;
-    //     }
-    //     state.filter = props.filter;
-    //     return state;
-    // }
 
     isDataLoadRequired(newProps) {
         //log.debug("[GRID] isDataLoadRequired: ", newProps);
@@ -74,8 +61,6 @@ class Grid extends Component {
         this.service.search(filter).then(response => {
 
             let data = response.result;
-
-            //TODO: compare data.query with this.filter and skip
 
             if (data && data.items && data.items.length) {
                 this.state.status.onComplete();
@@ -110,8 +95,6 @@ class Grid extends Component {
         let status = this.state.status
 
         let data = this.state.data
-
-        // let noData = !data || !data.items
 
         if (!status.isComplete()) {
             log.debug("[GRID] render status:", status)

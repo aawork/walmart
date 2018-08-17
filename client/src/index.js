@@ -1,9 +1,10 @@
 import ReactDOM from "react-dom";
 
 import React from "react";
-import {HashRouter as Router} from "react-router-dom";
+import {HashRouter as Router, Switch, Route} from "react-router-dom";
 
 import App from './js/App';
+import * as log from "loglevel";
 
 // ReactDOM.render((
 //     <Router>
@@ -19,6 +20,20 @@ import App from './js/App';
 
 ReactDOM.render((
     <Router>
-        <App />
+
+        <Switch>
+
+            <Route path="/product/:id" exact={true} render={({match}) =>
+                <App id={parseInt(match.params.id)} />
+            }/>
+
+            <Route path="/search/:query" render={({match}) =>
+                <App query={parseInt(match.params.query)} />
+            }/>
+
+            <App />
+
+        </Switch>
+
     </Router>
 ), document.getElementById('application'));

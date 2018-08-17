@@ -91,7 +91,7 @@ public class ProductService {
     private String validateNormalizeQuery(String query) {
 
         if (query == null) {
-            throw APIException.badRequest("Missed query parameter");
+            return null;
         }
 
         query = query.replaceAll("&", " ");
@@ -99,7 +99,7 @@ public class ProductService {
         query = StringUtils.trim(query);
 
         if (query.length() == 0) {
-            throw APIException.badRequest("Empty query parameter");
+            return null;
         }
 
         return query;
