@@ -32,16 +32,33 @@ public class ProductService {
     @Autowired
     private WalmartService service;
 
+    private LoadingCache<String, ListResponse<Product>> searchCache = CacheBuilder.newBuilder()
+            .expireAfterAccess(1, TimeUnit.MINUTES)
+            .maximumSize(50000)
+            .build(new CacheLoader<String, ListResponse<Product>>() {
+                @Override
+                public ListResponse<Product> load(String text) {
+                    return find(text);
+                }
+            });
+
     private LoadingCache<Long, Product> detailsCache = CacheBuilder.newBuilder()
             .expireAfterAccess(5, TimeUnit.MINUTES)
             .maximumSize(100000)
             .build(new CacheLoader<Long, Product>() {
                 @Override
                 public Product load(Long id) {
-                    final WLItem item = service.getById(id);
-                    final Product product = convert(item);
-                    product.setRecommendations(getRecommendations(id));
-                    return product;
+                    return loadProduct(id);
+                }
+            });
+
+    private LoadingCache<String, ListResponse<Product>> trendsCache = CacheBuilder.newBuilder()
+            .expireAfterAccess(10, TimeUnit.MINUTES)
+            .maximumSize(1)
+            .build(new CacheLoader<String, ListResponse<Product>>() {
+                @Override
+                public ListResponse<Product> load(String text) {
+                    return getCurrentTrends();
                 }
             });
 
@@ -51,8 +68,28 @@ public class ProductService {
             throw APIException.badRequest("missed ID");
         }
 
+        return getFromCache(detailsCache, id);
+    }
+
+    public ListResponse<Product> search(ListRequest request) {
+
+        if (request == null) {
+            throw APIException.badRequest("missed request object");
+        }
+
+        final String query = validateNormalizeQuery(request.getText());
+
+        if (query == null) {
+            // key 'TRENDS' could be replaced/used for trends in different product categories
+            return getFromCache(trendsCache, "TRENDS");
+        }
+
+        return getFromCache(searchCache, query);
+    }
+
+    private <K, R> R getFromCache(LoadingCache<K, R> cache, K key) {
         try {
-            return detailsCache.getUnchecked(id);
+            return cache.getUnchecked(key);
         } catch (Exception ex) {
             if (!(ex.getCause() instanceof APIException)) {
                 throw APIException.serverError(ex);
@@ -71,17 +108,28 @@ public class ProductService {
         return convertToProducts(recommendations);
     }
 
-    public ListResponse<Product> search(ListRequest request) {
+    private Product loadProduct(Long id) {
+        final WLItem item = service.getById(id);
+        final Product product = convert(item);
+        product.setRecommendations(getRecommendations(id));
+        return product;
+    }
 
-        if (request == null) {
-            throw APIException.badRequest("missed request object");
+    private ListResponse<Product> getCurrentTrends() {
+        return convert(service.trends());
+    }
+
+    private ListResponse<Product> find(String query) {
+
+        if (StringUtils.isEmpty(query)) {
+            throw APIException.badRequest("Query parameter missed");
         }
 
-        final String query = validateNormalizeQuery(request.getText());
+        return convert(service.search(query));
+    }
 
-        final WLSearchResponse wlResponse = StringUtils.isEmpty(query) ? service.trends() : service.search(query);
-
-        final ListResponse result = new ListResponse();
+    private ListResponse<Product> convert(WLSearchResponse wlResponse) {
+        final ListResponse<Product> result = new ListResponse();
         result.setItems(convertToProducts(wlResponse.getItems()));
         result.setTotal(wlResponse.getTotalResults());
 
@@ -93,6 +141,8 @@ public class ProductService {
         if (query == null) {
             return null;
         }
+
+        query = query.replaceAll("#", "%23");
 
         query = query.replaceAll("&", " ");
 

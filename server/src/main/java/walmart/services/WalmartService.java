@@ -52,8 +52,6 @@ public class WalmartService {
             throw APIException.badRequest("Query is too long");
         }
 
-        query = query.replaceAll("#", "%23");
-
         final String url = url("/search?query=" + query);
 
         log.debug("url: {}", url);
