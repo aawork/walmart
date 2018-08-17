@@ -1,3 +1,7 @@
+# Walmart Products
+
+Single-page responsive web application to display Walmart product search results and rank-ordered recommendations.
+
 ## Live Demo
 
 [http://rockvillesoft.com/walmart](http://rockvillesoft.com/walmart)
@@ -120,14 +124,17 @@ In this application it is possible to click on `recommendation` and navigate to 
     * Localization and text/ui orientation
     * Accessibility: label areas,
  
-### Testing (incomplete)
+## Incomplete (TODO)
 *  REST API testing:
     * for each endpoint verify and corners cases (incorrect input, timeouts)
     * for non API requests server should always respond with propper error and http status codes
 * UI end to end tests
-    * webpack / webdriver.io / selenium  
+    * webpack / webdriver.io / selenium         
+* Classes and methods comments
+* Change js/scss structure. Organize components in folders by components name
+* JS : apply jslint
+* JS : cleanup / simplify code
 
- 
        
 
 
