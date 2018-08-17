@@ -15,6 +15,18 @@ class SearchInput extends Component {
         this.handleCleanup = this.handleCleanup.bind(this);
     }
 
+    static getDerivedStateFromProps(props, state) {
+        let original = props.query ? props.query : ''
+        if(props.query != state.query && state.original != original) {
+            return  {
+                original: original,
+                value: original
+            };
+        }
+
+        return null;
+    }
+
     handleChange(event) {
         log.debug("[Search] handleChange", event.target.value)
         this.setState({value: event.target.value});

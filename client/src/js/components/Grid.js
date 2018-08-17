@@ -32,8 +32,7 @@ class Grid extends Component {
     }
 
     isDataLoadRequired(newProps) {
-        //log.debug("[GRID] isDataLoadRequired: ", newProps);
-        //log.debug("[GRID] isDataLoadRequired: " + this.state.filter+" vs "+newProps.filter);
+
         let filter = newProps.filter;
 
         let result = !this.filter && !filter ? false : this.filter != filter;

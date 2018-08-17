@@ -1,47 +1,31 @@
-import * as log from 'loglevel';
-
-import React, {Component} from "react";
-
-import {Route, Switch, withRouter} from "react-router-dom";
-
-import NavBar from '~/js/components/NavBar';
-
-import Grid from '~/js/components/Grid';
-
-import ProductDetails from '~/js/components/ProductDetails';
 import '~/styles/app.scss';
+import * as log from 'loglevel';
+import Grid from '~/js/components/Grid';
+import NavBar from '~/js/components/NavBar';
+import ProductDetails from '~/js/components/ProductDetails';
+import React, {Component} from "react";
+import {withRouter} from "react-router-dom";
+
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
 
 class App extends Component {
 
     constructor(props) {
         super();
-        let params = props.match.params
+
+        // log.enableAll()
+        // log.setDefaultLevel("debug")
+
+        log.disableAll()
+
+        log.info("[APP] constructor", props)
+
         this.state = {
-            query: params && params.query ? params.query : ''
+            product: null
         }
-        log.enableAll()
-        log.setDefaultLevel("debug")
-        //log.disableAll()
-
-        log.info("[APP] constructor", props.match)
-    }
-
-    static getDerivedStateFromProps(props, state) {
-
-        let params = props.match.params
-        if (params == null) {
-            if (state.query != '') {
-                log.debug("[APP] cleanup query")
-                return {query: ''}
-            }
-        } else {
-            if (params.query != state.query) {
-                log.debug("[APP] set query: " + params.query)
-                return {query: params.query}
-            }
-        }
-
-        return null
     }
 
     componentDidMount() {
@@ -62,19 +46,36 @@ class App extends Component {
     }
 
     search(query) {
+
+
+        log.info(this.props)
+
+        query = query.trim()
+
+        // query = query.replaceAll(/\s/g, "+");
+
+        query = query.replaceAll("%", "percent");   // TODO(AA): incomplete implementation (bug in react router)
+
+        // query = query.replaceAll("#", '%23');
+
         log.debug("[APP] query:" + query)
 
-        if (this.state.query != query) {
+        query = encodeURIComponent(query)
 
-            this.query = query;
+        log.info("[APP] current:" + this.props.location.pathname)
+        log.info("[APP] query:" + query)
+        log.info("[APP] props", this.props)
 
-            query = query.trim()
+        if (this.query != query) {
 
-            query = query.replaceAll(/\s/g, "+");
+            this.query = query
 
-            query = query.replace(/#/g, '%23');
+            this.props.history.push("/search/" + query)
 
-            this.props.history.push("/search/" + encodeURI(query))
+            // history.push("#/search/" + query)
+
+        } else {
+            log.debug("ignore search request")
         }
     }
 
@@ -82,54 +83,48 @@ class App extends Component {
         if (!query) {
             return null
         }
-        query = query.replaceAll("\\+", " ")
-        query = query.replaceAll("%23", "#")
+
+        // query = query.replaceAll("%25", "%")
+
+        query = decodeURIComponent(query)
+
+        // query = query.replaceAll("\\+", " ")
+
+        // query = query.replaceAll("%23", "#")
+
         query = query.trim()
+
+        log.warn("[APP] query: ", query)
+
         return query
     }
 
     render() {
 
+        let query = this.parseQuery(this.props.query)
+
+        let productId = this.props.id
+
         let product = this.state.product
+
+        let productItem = product && product.id == productId ? product : null
+
+        log.info("[APP] render Q:'" + this.props.query + "' ID:" + this.props.id, productItem)
 
         return (
             <div>
+                <NavBar query={query} callback={this.search.bind(this)}/>
 
-                <NavBar query={this.props.match.params.query} callback={this.search.bind(this)}/>
+                {productId != null && (
+                    <ProductDetails id={productId}
+                                    item={productItem}
+                                    openDetails={this.openDetails.bind(this)}
+                                    onClose={() => this.closeDetails()}/>
+                )}
 
-                <Switch>
-
-                    <Route path="/product/:id" exact={true} render={({match}) => {
-
-                        log.debug("[APP] product:" + (product ? product.id : null) + " match:" + match.params.id)
-
-                        let productId = match.params.id
-
-                        let productItem = product && product.id == productId ? product : null
-
-                        return (
-                            <ProductDetails id={parseInt(match.params.id)}
-                                            item={productItem}
-                                            openDetails={this.openDetails.bind(this)}
-                                            onClose={() => this.closeDetails()}/>);
-                    }
-                    }/>
-
-                    <Route path="/search/:query" render={({match}) => {
-                        let query = match.params.query;
-                        let filter = this.parseQuery(query)
-                        return (
-                            <Grid filter={filter} openDetails={this.openDetails.bind(this)}/>
-                        )
-                    }}/>
-
-                    <Route path="/" exact={true} render={({match}) => {
-                        return (
-                            <Grid openDetails={this.openDetails.bind(this)}/>
-                        )
-                    }}/>
-
-                </Switch>
+                {productId == null && (
+                    <Grid filter={query} openDetails={this.openDetails.bind(this)}/>
+                )}
             </div>
         );
     }
@@ -148,8 +143,3 @@ class App extends Component {
 }
 
 export default withRouter(App);
-
-String.prototype.replaceAll = function (search, replacement) {
-    var target = this;
-    return target.replace(new RegExp(search, 'g'), replacement);
-};
