@@ -46,7 +46,7 @@ Server app function as a proxy
 * search result : 1 minute
 * trends : 10 minutes
 * product details : 5 minutes
-* product details cached with associated recommendations (when product loaded by ID this approach will give 2x boost on reducing number of API calls. but when product information is already loaded during search and trends operations this gives up to 10% traffic overhead, not paying attention to gzaip filter). this obviously cold be done differently.   
+* product details cached with associated recommendations (when product loaded by ID this approach will give 2x boost on reducing number of API calls. but when product information is already loaded during search and trends operations this gives up to 10% traffic overhead, not paying attention to gzip filter). this obviously cold be done differently.   
 
 
 ### URL and bookmarks
