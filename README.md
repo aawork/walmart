@@ -79,7 +79,7 @@ All states in the app reflected by URL (bookmarks and direct links)
 
 * Initial Loading
 
-![Image of Loading](docs/load-process.png){:height="50%" width="50%"}
+![Image of Loading](docs/load-process.png)
 
 * Load completed successfully but without any information (empty response)
 
