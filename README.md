@@ -37,20 +37,26 @@ All 3 steps could be executed through:
 ```
 
 #### Run API Server Only 
-execute in /server:
+
+in /server:
+
 ```
     gradle start
 ```
 #### Run Client Only 
-execute in /client:
+
+in /client:
+
 ```
     npm start
 ```
-### Run Client e2e Test
+### 4. Run Client e2e Test
 Preconditions:
 * API server is running
 * Client app is running
-execute in /client:
+
+in /client:
+
 ```
     npm test
 ```
@@ -144,16 +150,12 @@ In this application it is possible to click on `recommendation` and navigate to 
     * Localization and text/ui orientation
     * Accessibility: label areas,
  
-## Incomplete (TODO)
+### TODO:
 *  REST API testing:
     * for each endpoint verify and corners cases (incorrect input, timeouts)
-    * for non API requests server should always respond with propper error and http status codes
-* UI end to end tests
-    * webpack / webdriver.io / selenium         
+    * for non API requests server should always respond with proper error and http status codes
 * Classes and methods comments
-* Change js/scss structure. Organize components in folders by components name
-* JS : apply jslint
-* JS : cleanup / simplify code
+* Change js/scss structure. Organize components in folders by component name
 
        
 
