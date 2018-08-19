@@ -16,7 +16,7 @@ class SearchInput extends Component {
     }
 
     static getDerivedStateFromProps(props, state) {
-        let original = props.query ? props.query : ''
+        let original = props.query ? props.query : '';
         if(props.query != state.query && state.original != original) {
             return  {
                 original: original,
@@ -34,9 +34,9 @@ class SearchInput extends Component {
     handleSubmit(event) {
         // log.debug("[Search] handleSubmit", event)
         event.preventDefault();
-        let q = this.state.value.trim()
+        let q = this.state.value.trim();
         if (q.length > 0) {
-            this.props.handleSearch(this.state.value)
+            this.props.handleSearch(this.state.value);
         }
     }
 
@@ -47,13 +47,14 @@ class SearchInput extends Component {
     }
 
     render() {
-        log.debug("render SearchInput")
+        log.debug("render SearchInput");
         return (
             <div className="searchInput">
                 <form onSubmit={this.handleSubmit}>
                     <button className="close"></button>
                     <div className="inputContainer">
                         <input
+                            autofocus="true"
                             maxLength="200"
                             name="search"
                             onChange={this.handleChange.bind(this)}

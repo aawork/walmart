@@ -2,7 +2,7 @@ import * as log from 'loglevel';
 import PropTypes from 'prop-types';
 import React, {Component} from "react";
 
-import DetailsService from "~/js/services/DetailsService"
+import DetailsService from "~/js/services/DetailsService";
 import Loading from '~/js/components/Loading';
 import LoadState from '~/js/model/LoadState';
 import Product from '~/js/components/Product';
@@ -15,35 +15,35 @@ class ProductDetails extends Component {
     constructor(props) {
         super(props);
         this.service = new DetailsService();
-        log.info("[DETAILS] constructor", props)
+        log.info("[DETAILS] constructor", props);
 
         let status = new LoadState();
 
-        status.start(loadingMessage)
+        status.start(loadingMessage);
 
         this.state = {
             id: props.id,
             item: props.item,
             status: status
-        }
+        };
 
-        this.loadDetails(props)
+        this.loadDetails(props);
     }
 
     static getDerivedStateFromProps(props, state) {
 
-        let nextId = props.id
+        let nextId = props.id;
 
-        let nextItem = props.item
+        let nextItem = props.item;
 
         let currentItem = state.item;
 
-        let currentId = state.id
+        let currentId = state.id;
 
-        let status = state.status
+        let status = state.status;
 
         if (currentId == null) {
-            log.error("[DETAILS] null currentId")
+            log.error("[DETAILS] null currentId");
             return null;
         }
 
@@ -52,15 +52,15 @@ class ProductDetails extends Component {
 
             if (currentItem) {
                 if (currentItem.id != nextId) {
-                    log.debug("[DETAILS] Item changed : Loading...")
-                    status.start(loadingMessage)
-                    return {item: null, id: nextId, status: status, stop: false}
+                    log.debug("[DETAILS] Item changed : Loading...");
+                    status.start(loadingMessage);
+                    return {item: null, id: nextId, status: status, stop: false};
                 }
             } else {
                 if (currentId != nextId) {
-                    log.debug("[DETAILS] ID changed : Loading...")
-                    status.start(loadingMessage)
-                    return {item: null, id: nextId, status: status, stop: false}
+                    log.debug("[DETAILS] ID changed : Loading...");
+                    status.start(loadingMessage);
+                    return {item: null, id: nextId, status: status, stop: false};
                 }
             }
 
@@ -72,20 +72,20 @@ class ProductDetails extends Component {
         }
 
         // status.start(loadingMessage)
-        return {item: nextItem, id: nextId, status: status, stop: false}
+        return {item: nextItem, id: nextId, status: status, stop: false};
     }
 
 
     shouldComponentUpdate(nextProps, nextState) {
 
         if (nextState.stop) {
-            log.debug("[DETAILS] stopped")
-            return true
+            log.debug("[DETAILS] stopped");
+            return true;
         }
 
         let result = this.props.id != nextProps.id;
 
-        log.debug("[DETAILS] shouldComponentUpdate: nextProps:" + nextProps.id + " vs " + this.props.id + " >>> " + result)
+        log.debug("[DETAILS] shouldComponentUpdate: nextProps:" + nextProps.id + " vs " + this.props.id + " >>> " + result);
 
         let nextId = nextProps.id;
 
@@ -93,7 +93,7 @@ class ProductDetails extends Component {
             this.loadDetails(nextProps, false);
         }
 
-        return true
+        return true;
     }
 
     onClose(event) {
@@ -106,26 +106,26 @@ class ProductDetails extends Component {
 
         let item = this.state ? this.state.item : null;
 
-        let status = this.state.status
+        let status = this.state.status;
 
         if (force || !item || item.id != id) {
 
             if (force) {
-                log.debug("[DETAILS] force => loading...")
+                log.debug("[DETAILS] force => loading...");
             } else if (!item) {
-                log.debug("[DETAILS] no item => loading...")
+                log.debug("[DETAILS] no item => loading...");
             } else {
-                log.debug("[DETAILS] id changed: => loading... " + id + " vs " + item.id)
+                log.debug("[DETAILS] id changed: => loading... " + id + " vs " + item.id);
             }
 
-            log.debug("[DETAILS] loading details... by " + id)
+            log.debug("[DETAILS] loading details... by " + id);
 
             this.service.loadDetails(id).then(response => {
-                status.onComplete()
-                let data = response.result
+                status.onComplete();
+                let data = response.result;
 
-                log.debug("[DETAILS] data", data)
-                log.debug("[DETAILS] recommendations", data.recommendations)
+                log.debug("[DETAILS] data", data);
+                log.debug("[DETAILS] recommendations", data.recommendations);
 
                 if (data.id == id) {
 
@@ -135,15 +135,15 @@ class ProductDetails extends Component {
                         status: status
                     }));
 
-                    log.info("[DETAILS] new state:", this.state)
+                    log.info("[DETAILS] new state:", this.state);
                 } else {
-                    log.error("[DETAILS] ignore: ID changed: " + data.id + " vs " + id)
+                    log.error("[DETAILS] ignore: ID changed: " + data.id + " vs " + id);
                 }
             }).catch(error => {
 
-                this.state.status.onError(error)
+                this.state.status.onError(error);
 
-                log.warn("[DETAILS] error", error)
+                log.warn("[DETAILS] error", error);
 
                 this.setState((prevState, props) => ({
                     id: id,
@@ -155,29 +155,29 @@ class ProductDetails extends Component {
 
         } else {
 
-            status.onComplete()
+            status.onComplete();
 
             if (!item.recommendations) {
 
-                log.debug("[DETAILS] loading recommendations... " + item.recommendations)
+                log.debug("[DETAILS] loading recommendations... " + item.recommendations);
 
                 this.service.loadDetails(id).then(response => {
                     //this.state.status.onComplete()
-                    let data = response.result
-                    log.debug("[DETAILS] recommendations", data.recommendations)
+                    let data = response.result;
+                    log.debug("[DETAILS] recommendations", data.recommendations);
                     if (data.id == id) {
                         this.setState((prevState, props) => ({
                             item: data
                         }));
                     } else {
-                        log.debug("[DETAILS] recommendations discrepancy: " + id + " vs " + data.id)
+                        log.debug("[DETAILS] recommendations discrepancy: " + id + " vs " + data.id);
                     }
                 }).catch(error => {
-                    log.error("[DETAILS] error", error)
+                    log.error("[DETAILS] error", error);
                     // process recommendations error is not needed : not critical for UX: avoid extra error messages
                 });
             } else {
-                log.debug("[DETAILS] do nothing")
+                log.debug("[DETAILS] do nothing");
             }
         }
     }
@@ -194,12 +194,12 @@ class ProductDetails extends Component {
 
     render() {
 
-        let status = this.state.status
+        let status = this.state.status;
 
         let item = this.state ? this.state.item : null;
 
         if (!status.isComplete()) {
-            log.debug("[DETAILS] render status:", status)
+            log.debug("[DETAILS] render status:", status);
             return (<Loading state={status}/>);
         }
 
@@ -209,7 +209,7 @@ class ProductDetails extends Component {
             return (<Loading state={status}/>);
         }
 
-        log.debug("[DETAILS] render details")
+        log.debug("[DETAILS] render details");
 
         let recommendations = [];
         if (item && item.recommendations) {

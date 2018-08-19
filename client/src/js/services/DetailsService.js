@@ -1,4 +1,4 @@
-import AbstractService from "~/js/services/AbstractService"
+import AbstractService from "~/js/services/AbstractService";
 
 class DetailsService extends AbstractService {
 
@@ -6,7 +6,7 @@ class DetailsService extends AbstractService {
 
         let url = "api/product/" + id;
 
-        return this.get(url)
+        return this.get(url);
     }
 }
 

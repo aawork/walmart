@@ -2,7 +2,7 @@ import * as log from "loglevel";
 
 const defaultHeaders = {
     "Content-Type": "application/json; charset=utf-8"
-}
+};
 
 class AbstractService {
 
@@ -11,7 +11,7 @@ class AbstractService {
         log.debug("[REST] response:", response);
 
         if (response.status != 200) {
-            throw {code: response.status, message: response.statusText}
+            throw {code: response.status, message: response.statusText};
         }
 
         let json = response.json();
@@ -20,15 +20,15 @@ class AbstractService {
 
             log.debug("[REST] json:", value);
 
-            let error = value.error
+            let error = value.error;
 
             if (error) {
-                log.error("REST error:", error)
+                log.error("REST error:", error);
                 throw error;
             }
 
             return value;
-        }))
+        }));
     }
 
     get(url) {
@@ -38,7 +38,7 @@ class AbstractService {
         };
 
         return fetch(url, options).then(response => {
-            return this.processResponse(response)
+            return this.processResponse(response);
         });
     }
 
@@ -50,7 +50,7 @@ class AbstractService {
         };
 
         return fetch(url, options).then(response => {
-            return this.processResponse(response)
+            return this.processResponse(response);
         });
     }
 }

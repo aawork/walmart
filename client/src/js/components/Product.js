@@ -8,14 +8,14 @@ import {Link} from "react-router-dom";
 
 class Product extends Component {
 
-    onSelected(event) {
+    onSelected() {
         //event.preventDefault();
-        log.info("[Product] onSelected", this.props.item)
+        log.info("[Product] onSelected", this.props.item);
         this.props.onClick(this.props.item);
     }
 
     render() {
-        log.debug("render Product")
+        log.debug("render Product");
         let item = this.props.item;
         return (
             <div className="cell">

@@ -94,7 +94,7 @@ public class ProductService {
             if (!(ex.getCause() instanceof APIException)) {
                 throw APIException.serverError(ex);
             }
-            throw APIException.notFound("Product is not found");
+            throw APIException.notFound();
         }
     }
 

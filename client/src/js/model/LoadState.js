@@ -12,48 +12,48 @@ class LoadState {
     }
 
     isInitial() {
-        return this.status === INITIAL
+        return this.status === INITIAL;
     }
 
     isLoading() {
-        return this.status === LOADING
+        return this.status === LOADING;
     }
 
     isFailed() {
-        return this.status === ERROR || this.status === SERVER_ERROR
+        return this.status === ERROR || this.status === SERVER_ERROR;
     }
 
     isEmpty() {
-        return this.status === EMPTY
+        return this.status === EMPTY;
     }
 
     isComplete() {
-        return this.status === COMPLETE
+        return this.status === COMPLETE;
     }
 
     start(message) {
         this.message = message;
-        this.status = LOADING
+        this.status = LOADING;
     }
 
     onError(error) {
-        this.status = !error || error.code >= 500 ? SERVER_ERROR : ERROR
+        this.status = !error || error.code >= 500 ? SERVER_ERROR : ERROR;
 
         if (this.status === SERVER_ERROR) {
-            this.message = "Server communication failed"
+            this.message = "Server communication failed";
         } else {
-            this.message = error && error.message ? error.message : null
+            this.message = error && error.message ? error.message : null;
         }
     }
 
     onEmpty(emptyMessage) {
         this.message = emptyMessage;
-        this.status = EMPTY
+        this.status = EMPTY;
     }
 
     onComplete() {
         this.message = null;
-        this.status = COMPLETE
+        this.status = COMPLETE;
     }
 
 }

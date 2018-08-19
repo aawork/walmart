@@ -12,7 +12,7 @@ class NavBar extends Component {
 
     render() {
 
-        log.debug("render NavBar", this.props)
+        log.debug("render NavBar", this.props);
 
         return (
             <nav className="sticky-top">

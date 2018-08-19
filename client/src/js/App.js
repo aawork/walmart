@@ -16,41 +16,41 @@ class App extends Component {
     constructor(props) {
         super();
 
-        log.enableAll()
-        log.setDefaultLevel("debug")
+        log.enableAll();
+        log.setDefaultLevel("debug");
 
         // log.disableAll()
 
-        log.info("[APP] constructor", props)
+        log.info("[APP] constructor", props);
 
         this.state = {
             product: null
-        }
+        };
     }
 
     componentDidMount() {
-        log.debug("[APP] componentDidMount", this.props)
+        log.debug("[APP] componentDidMount", this.props);
     }
 
     componentWillUnmount() {
-        log.debug("[APP] componentWillUnmount")
+        log.debug("[APP] componentWillUnmount");
     }
 
     shouldComponentUpdate(props) {
-        log.debug("[APP] shouldComponentUpdate", this.props.match.params, props)
+        log.debug("[APP] shouldComponentUpdate", this.props.match.params, props);
         return true;
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        log.debug("[APP] componentDidUpdate", this.props)
+        log.debug("[APP] componentDidUpdate", this.props);
     }
 
     search(query) {
 
 
-        log.info(this.props)
+        log.info(this.props);
 
-        query = query.trim()
+        query = query.trim();
 
         query = query.replace(/\s\s+/g, ' ');
 
@@ -60,9 +60,9 @@ class App extends Component {
 
         query = query.replaceAll("#", '%23');
 
-        log.debug("[APP] query:" + query)
+        log.debug("[APP] query:" + query);
 
-        query = encodeURIComponent(query)
+        query = encodeURIComponent(query);
 
         query = query.replaceAll("_", '+');
 
@@ -72,48 +72,48 @@ class App extends Component {
 
         if (this.query != query) {
 
-            this.query = query
+            this.query = query;
 
-            this.props.history.push("/search/" + query)
+            this.props.history.push("/search/" + query);
 
             // history.push("#/search/" + query)
 
         } else {
-            log.debug("ignore search request")
+            log.debug("ignore search request");
         }
     }
 
     parseQuery(query) {
         if (!query) {
-            return null
+            return null;
         }
 
         // query = query.replaceAll("%25", "%")
 
-        query = decodeURIComponent(query)
+        query = decodeURIComponent(query);
 
-        query = query.replaceAll("\\+", " ")
+        query = query.replaceAll("\\+", " ");
 
         // query = query.replaceAll("%23", "#")
 
-        query = query.trim()
+        query = query.trim();
 
-        log.warn("[APP] query: ", query)
+        log.warn("[APP] query: ", query);
 
-        return query
+        return query;
     }
 
     render() {
 
-        let query = this.parseQuery(this.props.query)
+        let query = this.parseQuery(this.props.query);
 
-        let productId = this.props.id
+        let productId = this.props.id;
 
-        let product = this.state.product
+        let product = this.state.product;
 
-        let productItem = product && product.id == productId ? product : null
+        let productItem = product && product.id == productId ? product : null;
 
-        log.info("[APP] render Q:'" + this.props.query + "' ID:" + this.props.id, productItem)
+        log.info("[APP] render Q:'" + this.props.query + "' ID:" + this.props.id, productItem);
 
         return (
             <div>
@@ -142,7 +142,7 @@ class App extends Component {
     }
 
     closeDetails() {
-        this.setState({product: null})
+        this.setState({product: null});
     }
 }
 
