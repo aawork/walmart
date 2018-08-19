@@ -10,8 +10,8 @@ project.ext.logbackVersion = "1.2.3"
 project.ext.slf4jVersion = "1.7.25"
 project.ext.jettyVersion = "9.4.8.v20180619"
 
-sourceSets.main.java.srcDirs = ['src/main/java']
-sourceSets.main.resources.srcDirs = ['src/main/resources']
+//sourceSets.main.java.srcDirs = ['src/main/java']
+//sourceSets.main.resources.srcDirs = ['src/main/resources']
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
