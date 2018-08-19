@@ -36,6 +36,26 @@ All 3 steps could be executed through:
     ./run.sh
 ```
 
+#### Run API Server Only 
+execute in /server:
+```
+    gradle start
+```
+#### Run Client Only 
+execute in /client:
+```
+    npm start
+```
+### Run Client e2e Test
+Preconditions:
+* API server is running
+* Client app is running
+execute in /client:
+```
+    npm test
+```
+ 
+
 ### Data Loading
 
 Search API returns all product information including long description. API do not provide option to reduce 'list' data to absolute minimum. 

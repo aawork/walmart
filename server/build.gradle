@@ -86,4 +86,9 @@ war {
     }
 }
 
+task start(type: JavaExec) {
+    main = "walmart.Application"
+    classpath = sourceSets.test.runtimeClasspath
+}
+
 
